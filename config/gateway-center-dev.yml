@@ -1,0 +1,80 @@
+spring:
+  mvc:
+    servlet:
+      load-on-startup: 1
+  rabbitmq:#rabbitmq消息队列服务ip和端口及登录账户信息(根据实际部署情况而定)
+    host: 192.168.1.62
+    port: 5672
+    username: runa
+    password: runa
+    virtual-host: /
+  zipkin:#调用链路信息存储在zipkin(根据自己实际部署情况而定)
+    base-url: http://192.168.1.62:9411
+    enabled: true
+    sender:
+      type: web
+logging:
+  level:
+    root: info
+    com.cloud: debug
+  file: logs/${spring.application.name}.log
+zuul:
+  ignored-services: '*'
+  strip-prefix: false
+  sensitiveHeaders: 
+  routes:
+    oauth:
+      path: /api-o/**
+      serviceId: oauth-center
+    user-center:
+      path: /user-center/**
+      serviceId: user-center
+    log:
+      path: /api-l/**
+      serviceId: log-center
+    file:
+      path: /api-f/**
+      serviceId: file-center
+    meter:
+      path: /meter/**
+      serviceId: meter
+    meter-zcx:
+      path: /meter-zcx/**
+      serviceId: meter-zcx
+    meter-lhl:
+      path: /meter-lhl/**
+      serviceId: meter-lhl
+    meter-guangrao:
+      path: /meter-guangrao/**
+      serviceId: meter-guangrao
+    meter-taiyuan:
+      path: /meter-taiyuan/**
+      serviceId: meter-taiyuan
+    analysis:
+      path: /analysis/**
+      serviceId: analysis
+    maintain:
+      path: /maintain/**
+      serviceId: maintain
+    monitor:
+      path: /monitor/**
+      serviceId: monitor
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
+  add-proxy-headers: true
+  ribbon:
+    eager-load:
+      enabled: true
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 70000
+cron:
+  black-ip: 0 0/5 * * * ?

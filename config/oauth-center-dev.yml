@@ -1,0 +1,49 @@
+spring:
+  redis:#根据redis部署的情况,确定ip&端口
+    host: 192.168.1.62
+    port: 6379
+  datasource:#根据数据库部署的情况,确定ip&端口及登录账户信息
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud_oauth?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-test-query: SELECT 1
+  rabbitmq:#rabbitmq消息队列服务ip和端口及登录账户信息(根据实际部署情况而定)
+    host: 192.168.1.62
+    port: 5672
+    username: runa
+    password: runa
+    virtual-host: /
+  mvc:
+    servlet:
+      load-on-startup: 1
+  zipkin:#调用链路信息存储在zipkin(根据自己实际部署情况而定)
+    base-url: http://192.168.1.62:9411
+    enabled: true
+    sender:
+      type: web
+access_token:
+  store-jwt: false
+  jwt-signing-key: xiao@wei@jia@gou=$==+_+%0%:)(:)
+  add-userinfo: false
+logging:
+  level:
+    root: info
+    com.cloud: debug
+  file: logs/${spring.application.name}.log
+ribbon:
+  eager-load:
+    enabled: true
+    clients: user-center
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

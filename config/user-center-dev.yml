@@ -1,0 +1,63 @@
+logging:
+  level:
+    root: info
+    com.cloud: debug
+  file: logs/${spring.application.name}.log
+spring:
+  datasource:#根据数据库部署的情况,确定ip&端口及登录账户信息
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.1.60:3306/user-center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: runa#2019
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-test-query: SELECT 1
+  rabbitmq:#rabbitmq消息队列服务ip和端口及登录账户信息(根据实际部署情况而定)
+    host: 192.168.1.62
+    port: 5672
+    username: runa
+    password: runa
+    virtual-host: /
+  redis:#根据redis部署的情况,确定ip&端口
+    host: 192.168.1.62
+    port: 6379
+  mvc:
+    servlet:
+      load-on-startup: 1
+  aop:
+    proxy-target-class: true
+  zipkin:#调用链路信息存储在zipkin(根据自己实际部署情况而定)
+    base-url: http://192.168.1.62:9411
+    enabled: true
+    sender:
+      type: web
+mybatis:
+  type-aliases-package: com.cloud.model.user
+  mapper-locations: classpath:/mybatis-mappers/*
+  configuration:
+    mapUnderscoreToCamelCase: true
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://192.168.1.63:8080/api-o/user-me
+      prefer-token-info: false
+wechat:
+  domain: http://192.168.1.63:8080/api-u
+  infos:
+    app1:
+      appid: xxx
+      secret: xxx
+    app2:
+      appid: xxx
+      secret: xxx
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
